@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>todolist</title>
+	<script src="./vue.js"></script>
+</head>
+<body>
+	<div id="done">
+		<div>
+			<input v-model="inputValue">
+			<button v-on:click="save">提交</button>
+		</div>
+		<ul>
+			<!-- <li v-for="(item,index) of list" :key="index">{{item}}</li> -->
+			<todo-item 
+			 	v-for="(item,index) of list" 
+			 	:key="index"
+			 	:content="item"
+			 	:index="index"
+			 	@delete="handleDelete"
+			>
+			</todo-item> 
+			 <!-- 父组件给子组件传值通过属性的形式  content  给子组件传递对应的值 -->
+			 <!-- 全局组件 -->
+			<!-- <TodoItem></TodoItem> -->
+		</ul>
+	</div>
+</body>
+<script>
+	//创建组件
+	Vue.component("todo-item",{
+		props:['content','index'],  
+		//表示可以从父组件里获取content和index
+		template:"<li @click='handleClick'>{{content}} {{index}}</li>",
+		methods:{
+			handleClick:function(){
+				this.$emit('delete',this.index)
+			}
+		}
+	})   //这是定义全局组件，可以直接调用
+
+
+
+	// var TodoItem = {
+	// 	template:"<li>item</li>"
+	// }; //定义局部组件，需要在vue实例里面注明components属性
+
+
+	new Vue({
+		el:"#done",
+		// components:{
+		// 	'TodoItem':TodoItem
+		// },
+		data:{
+			inputValue:"",
+			list:[]
+		},
+		methods:{
+			save:function(){
+				this.list.push(this.inputValue);
+				this.inputValue = "";
+			},
+			handleDelete:function(index){
+				this.list.splice(index,1)
+			}
+		}
+	})
+</script>
+</html>

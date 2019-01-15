@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>vue</title>
+	<script src="./vue.js"></script>
+</head>
+<body>
+	<!-- 挂载点，模板和实例之间的关系 -->
+
+	<div id='root'>
+		<h1> hello {{msg}}</h1>  <!-- 挂载点内部的内容称为模板 -->
+	</div>   <!-- 标签div是vue实例的挂载点 -->
+
+	<div id="box">
+		<h1 v-text="number"></h1>   
+		<h1 v-html="number"></h1>   
+		<h1 v-html="content"></h1>  
+		<h1 v-text="content"></h1>    
+		<!-- v-html和v-text的区别是标签是否被解析 -->
+	</div>
+
+	<div id="event">
+		<!-- <div v-on:click="()=>{alert(123)}">{{a}}</div> -->
+		<div v-on:click='handleClick' v-text="a">{{a}}</div>
+		<!-- v-on简写成@  -->
+	</div>
+
+	<div id="data_band">
+		<!-- 属性绑定 -->
+		<div v-band:title="title">hello world</div>
+		<!--"v-band:"  可以缩写成 ":"
+			当前的title属性与vue实例里面的title数据项绑定 -->
+
+		<!-- 双向数据绑定 -->
+		<input :value="content">
+		<input v-model="content">
+		<div>{{content}}</div>
+		<div v-text="content"></div>
+	</div>
+
+	<div id="calculate">
+		<input v-model="firstName">
+		<input v-model="lastName">
+		<div>{{firstName}} {{lastName}}</div>
+		<div>{{fullName}}</div>           
+		<!-- fullName是vue实例的计算属性 -->
+		<div>{{count}}</div>
+		<!-- count是侦听器 -->
+	</div>
+
+	<div id="order">
+		<div v-if="show">hello world</div>
+		<button @click="handleClick2">toggle</button>		
+		<div v-show="show">hello world</div>    <!-- 没有从dom树上清除，加了display的css属性，性能比v-if高（若显示隐藏频率高的话） -->
+		<ul>
+			<li v-for="item of list" :key="item">{{item}}</li>
+			<!-- key提升每一项渲染的性能，循环中每一项数据都不能相同 -->
+		</ul>
+		<ul>
+			<li v-for="(item,index) of list2" :key="index">{{item}}</li>
+			<!-- key提升每一项渲染的性能，循环中每一项数据都不能相同 -->
+		</ul>
+	</div>
+</body>
+<script>
+	new Vue({
+		el:"#root",  //与哪个dom节点绑定,    挂载点
+		//template:"<h1> hello tt {{msg}}</h1>",   //模板，既可以写在挂载点内部，也可以写在vue实例里面
+		data:{
+			msg:"hello world"
+		}
+	})
+
+	new Vue({
+		el:"#box",
+		data:{
+			number:123,
+			content:"<h1> hello </h1>"
+		}
+	})
+
+
+	new Vue({
+		el:"#event",
+		data:{
+			a:"点我啊"
+		},
+		methods:{
+			handleClick:function(){
+				alert(123);
+				this.a = "点完了";
+			}
+		}
+	})
+
+
+	new Vue({
+		el:"#data_band",
+		data:{
+			title:"this is hello world",
+			content:"this is content"
+		}
+	})
+
+
+	new Vue({
+		el:"#calculate",
+		data:{
+			firstName:"1",
+			lastName:"2",
+			count:0
+		},
+		computed:{
+			fullName:function(){
+				return this.firstName+" "+this.lastName
+			}
+		},
+		watch:{
+			firstName:function(){
+				this.count++
+			},
+			lastName:function(){
+				this.count++
+			}
+			// fullName:function(){
+			// 	this.count++
+			// }
+		}   //侦听器
+	})
+
+
+	new Vue({
+		el:"#order",
+		data:{
+			show:true,
+			list:[1,2,3,4],
+			list2:["a","a","b"]
+		},
+		methods:{
+			handleClick2:function(){
+				this.show = !this.show;
+			}
+		}
+	})
+
+
+
+
+
+</script>
+</html>
